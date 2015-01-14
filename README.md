@@ -1,4 +1,4 @@
-# Java BootCamp base folders layout
+﻿# Java BootCamp base folders layout
 
 Please, use this repository as a base for you training phase. The idea is to
 fork this project so everyone use the same folder structure for the
@@ -213,7 +213,7 @@ Commit your practice code.
 
 #####Practice:#####
 
-1. Create a ShoppingCart where a user can buy different items and then decide how to pay them:
+1. Create a ShoppingCart where a user can buy different items and then decide how to pay them:(FACTORY)
  
      * by Credit Card: where a Name and a Credit Number is required.
 
@@ -221,7 +221,7 @@ Commit your practice code.
 
      * Cash: no information is required.
 
-2. Add the following discount depending on the payment type
+2. Add the following discount depending on the payment type (STRATEGY)
 
      * 10% by Credit Card.
 
@@ -229,9 +229,9 @@ Commit your practice code.
 
      * 90% of the most expensive item is free if the user pays by Cash.
 
-3. Create a counter to provide unique sequential numbers and use it to set an identification to each payment transaction.
+3. Create a counter to provide unique sequential numbers and use it to set an identification to each payment transaction.(SINGLETON)
 
-4. Add functionality to display information about the list of items. The item should be displayed as:
+4. Add functionality to display information about the list of items. The item should be displayed as: (ITERATOR)
 
      * Item Name ....... $ price
 
@@ -242,7 +242,7 @@ Commit your practice code.
 
        - Item Name ...... $ price
 
-6. Add a mailist List where the market manager is notified when:
+6. Add a mailist List where the market manager is notified when: (OBSERVER)
     
      * A new item/offer is added
 
