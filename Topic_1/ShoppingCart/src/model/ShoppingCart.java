@@ -10,14 +10,13 @@ import utils.SingletonCounter;
 
 public class ShoppingCart {
 
-	private static SingletonCounter singleton = SingletonCounter.getInstance();
 	public long idNumber;
 	public Catalog chosenItems;
 	public PaymentMethod paymentMethod;
 	public float total;
 
-	public ShoppingCart(String paymentMethod) {
-		idNumber = singleton.getNumber();
+	public ShoppingCart(SingletonCounter singleton, String paymentMethod) {
+		idNumber = singleton.nextId();
 		this.paymentMethod = new PaymentFactory().getPaymentMethod(paymentMethod);
 	}
 
@@ -51,6 +50,21 @@ public class ShoppingCart {
 
 	public float getTotal() {
 		return total;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("N°= ");
+		builder.append(idNumber);
+		builder.append(" Catálogo= ");
+		builder.append(chosenItems);
+		builder.append(" Tipo de Pago= ");
+		builder.append(paymentMethod);
+		builder.append(" Total= ");
+		builder.append(total);
+		builder.append("\n");
+		return builder.toString();
 	}
 
 }

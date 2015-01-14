@@ -2,27 +2,22 @@ package utils;
 
 public class SingletonCounter {
 
-	private static SingletonCounter singletonExample = null;
-	private static int counter;
+	private static SingletonCounter singleton = null;
+	private int counter = 1;
 
 	private SingletonCounter() {
-		counter = 1;
 	}
 
 	public static SingletonCounter getInstance() {
-		if (singletonExample == null) {
-			singletonExample = new SingletonCounter();
-		} else {
-			increment();
+		synchronized (SingletonCounter.class) {
+			if (singleton == null) {
+				singleton = new SingletonCounter();
+			}
 		}
-		return singletonExample;
+		return singleton;
 	}
 
-	private static void increment() {
-		counter++;
-	}
-
-	public int getNumber() {
-		return counter;
+	public int nextId() {
+		return counter++;
 	}
 }
