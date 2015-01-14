@@ -19,7 +19,7 @@ public class Item {
 	}
 
 	public String toString() {
-		StringBuilder r = new StringBuilder("name");
+		StringBuilder r = new StringBuilder(name);
 		while (r.length() < 35) {
 			r.append(".");
 		}

@@ -7,8 +7,8 @@ public class PayPal extends PaymentMethod {
 
 	public PayPal() {
 		this.name = "PayPal";
-		this.user = "";
-		this.password = "";
+		this.user = "AlgunUsuario";
+		this.password = "UnaContraseña";
 	}
 
 	public PayPal(String user, String password) {
@@ -41,13 +41,11 @@ public class PayPal extends PaymentMethod {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tipo de Pago: ");
 		builder.append(name);
 		builder.append(" Usuario= ");
 		builder.append(user);
 		builder.append(" Contraseña= ");
 		builder.append(password);
-		builder.append("\n");
 		return builder.toString();
 	}
 

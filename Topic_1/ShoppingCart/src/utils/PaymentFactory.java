@@ -8,10 +8,10 @@ import model.PaymentMethod;
 public class PaymentFactory {
 
 	public PaymentMethod getPaymentMethod(String type) {
-		if ("tarjeta".equals(type)) {
+		if ("Tarjeta".equals(type)) {
 			return new CreditCard();
 		} else {
-			if ("paypal".equals(type)) {
+			if ("PayPal".equals(type)) {
 				return new PayPal();
 			} else {
 				return new Cash();

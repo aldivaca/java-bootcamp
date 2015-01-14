@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Iterator;
+
 import utils.CashDiscount;
 import utils.Context;
 import utils.CreditCardDiscount;
@@ -16,8 +18,10 @@ public class ShoppingCart {
 	public float total;
 
 	public ShoppingCart(SingletonCounter singleton, String paymentMethod) {
-		idNumber = singleton.nextId();
+		this.idNumber = singleton.nextId();
 		this.paymentMethod = new PaymentFactory().getPaymentMethod(paymentMethod);
+		this.chosenItems = new Catalog();
+		this.total = getTotal();
 	}
 
 	public void addItem(Item item) {
@@ -52,16 +56,44 @@ public class ShoppingCart {
 		return total;
 	}
 
+	public float getSubTotal() {
+		Iterator<Item> it = chosenItems.iterator();
+		float subtotal = 0;
+		while (it.hasNext()) {
+			subtotal += it.next().getPrice();
+		}
+		return subtotal;
+	}
+
+	public String mostrarCatálogo() {
+		if (chosenItems == null) {
+			return "";
+		} else {
+			Iterator<Item> it = chosenItems.iterator();
+			StringBuilder builder = new StringBuilder("\n");
+			while (it.hasNext()) {
+				builder.append(it.next().toString());
+				builder.append("\n");
+			}
+			return builder.toString();
+		}
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("N°= ");
 		builder.append(idNumber);
-		builder.append(" Catálogo= ");
-		builder.append(chosenItems);
-		builder.append(" Tipo de Pago= ");
+		builder.append("\n");
+		builder.append("Catálogo= ");
+		builder.append(mostrarCatálogo());
+		builder.append("Tipo de Pago= ");
 		builder.append(paymentMethod);
-		builder.append(" Total= ");
+		builder.append("\n");
+		builder.append("Subtotal= ");
+		builder.append(getSubTotal());
+		builder.append("\n");
+		builder.append("Total= ");
 		builder.append(total);
 		builder.append("\n");
 		return builder.toString();

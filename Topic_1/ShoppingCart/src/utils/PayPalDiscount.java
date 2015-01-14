@@ -15,7 +15,7 @@ public class PayPalDiscount implements DiscountStrategy {
 	public float calcularTotal(Catalog cart) {
 		Item currentItem;
 		float price;
-		float descuento = 0;
+		float descuento = 89000000;
 		float total = 0;
 		Iterator<Item> it = cart.iterator();
 		while (it.hasNext()) {

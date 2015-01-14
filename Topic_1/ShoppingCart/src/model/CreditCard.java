@@ -7,8 +7,8 @@ public class CreditCard extends PaymentMethod {
 
 	public CreditCard() {
 		this.name = "Tarjeta de Credito";
-		this.ownerName = "";
-		this.number = 0;
+		this.ownerName = "Un dueño de la tarjeta de credito";
+		this.number = 1234567890;
 	}
 
 	public CreditCard(String owner, long number) {
@@ -41,13 +41,11 @@ public class CreditCard extends PaymentMethod {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tipo de Pago: ");
 		builder.append(name);
 		builder.append(" Titular= ");
 		builder.append(ownerName);
 		builder.append(" Número= ");
 		builder.append(number);
-		builder.append("\n");
 		return builder.toString();
 	}
 

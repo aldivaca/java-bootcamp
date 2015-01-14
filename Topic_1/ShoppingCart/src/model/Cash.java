@@ -14,9 +14,7 @@ public class Cash extends PaymentMethod {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Tipo de Pago: ");
 		builder.append(name);
-		builder.append("\n");
 		return builder.toString();
 	}
 }
