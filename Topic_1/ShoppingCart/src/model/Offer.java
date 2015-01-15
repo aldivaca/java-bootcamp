@@ -1,18 +1,20 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Offer extends Item {
 
-	public Catalog offerContent;
+	public List<Item> offerContent;
 
-	public Offer(String name, float price) {
-		super(name, price);
-		offerContent = new Catalog();
+	public Offer(String name, float price, boolean isNew) {
+		super(name, price, isNew);
+		offerContent = new ArrayList<Item>();
 	}
 
 	public void addItem(Item item) {
-		offerContent.addItem(item);
+		offerContent.add(item);
 	}
 
 	public String toString() {

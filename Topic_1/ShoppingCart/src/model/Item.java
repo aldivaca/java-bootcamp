@@ -1,11 +1,12 @@
 package model;
 
+
 public class Item {
 
 	String name;
 	float price;
 
-	public Item(String name, float price) {
+	public Item(String name, float price, boolean isNew) {
 		this.name = name;
 		this.price = price;
 	}
@@ -18,6 +19,10 @@ public class Item {
 		return price;
 	}
 
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
 	public String toString() {
 		StringBuilder r = new StringBuilder("* ");
 		r.append(name);
@@ -28,4 +33,5 @@ public class Item {
 		r.append(price);
 		return r.toString();
 	}
+
 }

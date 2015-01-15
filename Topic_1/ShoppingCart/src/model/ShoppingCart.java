@@ -32,6 +32,10 @@ public class ShoppingCart {
 		return chosenItems;
 	}
 
+	public long getIdNumber() {
+		return idNumber;
+	}
+
 	public void setTotal() {
 		Context context;
 		DiscountStrategy strategy;
