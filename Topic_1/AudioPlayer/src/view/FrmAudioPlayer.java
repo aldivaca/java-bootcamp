@@ -28,11 +28,13 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
         personalizeGUI();
         initComponents();
     }
-    
+
     private Clip clip;
     private DefaultListModel mdlList = new DefaultListModel();
     private boolean isPlaying = false;
     private Long actualPosition;
+    private String actualSong;
+    private AudioInputStream audioInputStream;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -52,6 +54,7 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
         btnPlay = new javax.swing.JButton();
         btnPause = new javax.swing.JButton();
         btnStop = new javax.swing.JButton();
+        actualStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AudioPlayer");
@@ -59,6 +62,11 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "PlayList", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
+        songsList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                songsListMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(songsList);
 
         btnRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/images/minus.png"))); // NOI18N
@@ -151,6 +159,7 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
         btnPause.setToolTipText("Pause");
         btnPause.setBorderPainted(false);
         btnPause.setContentAreaFilled(false);
+        btnPause.setEnabled(false);
         btnPause.setMargin(new java.awt.Insets(2, 2, 2, 2));
         btnPause.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -185,6 +194,8 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
             }
         });
 
+        actualStatus.setText("Stopped");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -199,8 +210,12 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
                         .addGap(40, 40, 40)
                         .addComponent(btnPause)
                         .addGap(40, 40, 40)
-                        .addComponent(btnStop)
-                        .addGap(27, 27, 27))))
+                        .addComponent(btnStop)))
+                .addGap(4, 4, 4))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(actualStatus)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,7 +227,8 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
                     .addComponent(btnPause)
                     .addComponent(btnPlay)
                     .addComponent(btnStop))
-                .addGap(6, 6, 6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(actualStatus))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -223,40 +239,44 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
-        
+
         int index = this.songsList.getSelectedIndex();
         if (songsList.getModel().getSize() > 0) {
+            if (actualSong.equals((String) mdlList.elementAt(index))) {
+                stopSound();
+                actualSong = "";
+            }
             mdlList.removeElementAt(index);
         } else {
             JOptionPane.showMessageDialog(null, "No hay archivos para remover de la lista", "Error!", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnRemoveActionPerformed
-    
+
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        
+
         JFileChooser fc = new JFileChooser();
-        
+
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivo de audio WAV (*.wav)", "wav");
         fc.setFileFilter(filter);
         fc.setAcceptAllFileFilterUsed(false);
         String workingDir = System.getProperty("user.dir");
         fc.setCurrentDirectory(new File(workingDir));
-        
+
         if (!fc.isMultiSelectionEnabled()) {
             fc.setMultiSelectionEnabled(true);
         }
-        
+
         int returnVal = fc.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            
+
             File[] files = fc.getSelectedFiles();
             for (int i = 0; i < files.length; i++) {
                 File f = new File(files[i].getAbsolutePath());
@@ -265,70 +285,78 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
                 songsList.setSelectedIndex(0);
             }
         }
-        
+
     }//GEN-LAST:event_btnAddActionPerformed
-    
+
     private void btnAddFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnAddFocusGained
         btnAdd.setContentAreaFilled(true);// TODO add your handling code here:
     }//GEN-LAST:event_btnAddFocusGained
-    
+
     private void btnAddFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnAddFocusLost
         btnAdd.setContentAreaFilled(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnAddFocusLost
-    
+
     private void btnRemoveFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnRemoveFocusGained
         btnRemove.setContentAreaFilled(true);// TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveFocusGained
-    
+
     private void btnRemoveFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnRemoveFocusLost
         btnRemove.setContentAreaFilled(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveFocusLost
-    
+
     private void btnPlayFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnPlayFocusGained
         btnPlay.setContentAreaFilled(true);// TODO add your handling code here:
     }//GEN-LAST:event_btnPlayFocusGained
-    
+
     private void btnPlayFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnPlayFocusLost
         btnPlay.setContentAreaFilled(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnPlayFocusLost
-    
+
     private void btnPauseFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnPauseFocusGained
         btnPause.setContentAreaFilled(true);// TODO add your handling code here:
     }//GEN-LAST:event_btnPauseFocusGained
-    
+
     private void btnPauseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnPauseFocusLost
         btnPause.setContentAreaFilled(false);// TODO add your handling code here:
     }//GEN-LAST:event_btnPauseFocusLost
-    
+
     private void btnStopFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnStopFocusGained
         btnStop.setContentAreaFilled(true);// TODO add your handling code here:
     }//GEN-LAST:event_btnStopFocusGained
-    
+
     private void btnStopFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_btnStopFocusLost
         btnStop.setContentAreaFilled(false);
     }//GEN-LAST:event_btnStopFocusLost
-    
+
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        
+
         if (!isPlaying) {
-            String song = (String) songsList.getSelectedValue();
-            playSound(song);
+            playSound(actualSong);
         } else {
-            resumeSound();
+            if (actualSong.equals((String) songsList.getSelectedValue())) {
+                resumeSound();
+            } else {
+                playSound(actualSong);
+            }
         }
-        
+
     }//GEN-LAST:event_btnPlayActionPerformed
-    
+
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         if (isPlaying) {
             stopSound();
         }
-        
+
     }//GEN-LAST:event_btnStopActionPerformed
-    
+
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
         pauseSound();
     }//GEN-LAST:event_btnPauseActionPerformed
+
+    private void songsListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_songsListMouseClicked
+        actualSong = (String) songsList.getSelectedValue();
+
+    }//GEN-LAST:event_songsListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -343,6 +371,7 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel actualStatus;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnPause;
     private javax.swing.JButton btnPlay;
@@ -367,32 +396,43 @@ public class FrmAudioPlayer extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FrmAudioPlayer.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
     }
-    
+
     public void playSound(String file) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
+            audioInputStream = AudioSystem.getAudioInputStream(new File(file).getAbsoluteFile());
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start();
             isPlaying = true;
+            actualStatus.setText("Playing song " + new File(actualSong).getName());
+            btnPause.setEnabled(true);
+            btnPlay.setEnabled(false);
         } catch (Exception ex) {
             System.out.println("Error with playing sound.");
             ex.printStackTrace();
         }
     }
-    
+
     public void stopSound() {
         clip.stop();
         isPlaying = false;
+        btnPlay.setEnabled(true);
+        actualStatus.setText("Stopped");
     }
-    
+
     public void pauseSound() {
         actualPosition = clip.getMicrosecondPosition();
         clip.stop();
+        btnPlay.setEnabled(true);
+        btnPause.setEnabled(false);
+        actualStatus.setText("Paused song " + new File(actualSong).getName());
     }
-    
+
     public void resumeSound() {
         clip.setMicrosecondPosition(actualPosition);
         clip.start();
+        btnPlay.setEnabled(false);
+        btnPause.setEnabled(true);
+        actualStatus.setText("Playing song " + new File(actualSong).getName());
     }
 }
